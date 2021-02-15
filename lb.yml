@@ -1,0 +1,15 @@
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-django
+  labels:
+    app: django
+  namespace: dev
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: django
+    tier: varnish

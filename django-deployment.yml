@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django
+  labels:
+    app: django
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: django
+    tier: django
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+  labels:
+    app: django
+spec:
+  selector:
+    matchLabels:
+      app: django
+      tier: django
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: django
+        tier: django
+    spec:
+      containers:
+      - image: lkamz/django-webapp:1.0
+        command: ['docker-entrypoint.sh']
+        name: django
+        env:
+        - name: DJANGO_ALLOWED_HOSTS
+          value: "*"
+        - name: DATABASE_HOST
+          value: django-mysql
+        - name: DATABASE_NAME
+          value: django
+        - name: DATABASE_USERNAME
+          value: django
+        - name: DATABASE_ENGINE
+          value: mysql
+        - name: DATABASE_PORT
+          value: "3306"
+        - name: CONFIGURE_MYSQL_CONNECTION
+          value: "true"
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: django-secret-key
+              key: key
+        - name: MYSQL_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: MYSQL_DJANGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: django-db-pass
+              key: password 
+        ports:
+        - containerPort: 8000
+          name: django
