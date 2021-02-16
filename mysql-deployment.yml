@@ -4,6 +4,7 @@ metadata:
   name: django-mysql
   labels:
     app: django
+  namespace: dev
 spec:
   ports:
     - port: 3306
@@ -18,6 +19,7 @@ metadata:
   name: mysql-pv-claim
   labels:
     app: django
+  namespace: dev
 spec:
   accessModes:
     - ReadWriteOnce
@@ -31,6 +33,7 @@ metadata:
   name: django-mysql
   labels:
     app: django
+  namespace: dev
 spec:
   selector:
     matchLabels:

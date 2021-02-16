@@ -5,6 +5,7 @@ metadata:
   name: django
   labels:
     app: django
+  namespace: dev
 spec:
   ports:
     - port: 8000
@@ -19,6 +20,7 @@ metadata:
   name: django
   labels:
     app: django
+  namespace: dev
 spec:
   selector:
     matchLabels:
@@ -34,7 +36,7 @@ spec:
         tier: django
     spec:
       containers:
-      - image: lkamz/django-webapp:1.0
+      - image: lkamz/django-webapp:1.1
         command: ['docker-entrypoint.sh']
         name: django
         env:
@@ -62,7 +64,7 @@ spec:
             secretKeyRef:
               name: mysql-pass
               key: password
-        - name: MYSQL_DJANGO_PASSWORD
+        - name: DATABASE_DJANGO_PASSWORD
           valueFrom:
             secretKeyRef:
               name: django-db-pass
